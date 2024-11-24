@@ -5,13 +5,12 @@ from diffusers.utils import load_image, export_to_video
 
 import tkinter as tk
 from tkinter import filedialog
-#import webbrowser
-#from threading import Thread
-#import sys
+import webbrowser
+from threading import Thread
+import sys
 
-'''
 # Create a frame in the GUI window to display console output
-    class Application(tk.Frame):
+class Application(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.master = master
@@ -29,7 +28,6 @@ from tkinter import filedialog
             if not line:
                 break
             self.output_text.insert(tk.END, line)
-'''
 
 def open_url():
     # Get input from text entry
@@ -41,8 +39,7 @@ def open_url():
         torch_dtype=torch.float16, 
         variant="fp16"
         ).to("cuda")
-#        pipe.enable_model_cpu_offload()
-#        pipe.unet = torch.compile(pipe.unet, mode="reduce-overhead", fullgraph=True)
+        pipe.enable_model_cpu_offload()
 
         # Get the output filename and append '.mp4' extension
         output_name = name_file.get() + '.mp4'
@@ -51,23 +48,14 @@ def open_url():
         image = load_image(url)
         image = image.resize((1024, 576))
         
-        '''
         # Display the console output in the GUI window
         app = Application(master=root)
         thread = Thread(target=app.update_output)
         thread.start()
-        '''
 
         # Generate the AI video frames
         generator = torch.manual_seed(42)
-        frames = pipe(
-        image, 
-        decode_chunk_size=8, 
-        generator=generator, 
-        num_frames=25,
-        motion_bucket_id=180, 
-        noise_aug_strength=0.1
-        ).frames[0]
+        frames = pipe(image, decode_chunk_size=8, generator=generator, motion_bucket_id=180, noise_aug_strength=0.1).frames[0]
         
         # Create the output file and display it in a web browser
         export_to_video(frames, output_name, fps=7)

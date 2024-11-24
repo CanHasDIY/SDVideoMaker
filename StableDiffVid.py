@@ -13,5 +13,5 @@ image = load_image("https://huggingface.co/datasets/huggingface/documentation-im
 image = image.resize((1024, 576))
 
 generator = torch.manual_seed(42)
-frames = pipe(image, decode_chunk_size=8, generator=generator, motion_bucket_id=180, noise_aug_strength=0.1).frames[0]
-export_to_video(frames, "generated.mp4", fps=7)
+frames = pipe(image, decode_chunk_size=8, generator=generator, motion_bucket_id=180, noise_aug_strength=0.1,num_frames=30).frames[0]
+export_to_video(frames, "generated.mp4", fps=10)
